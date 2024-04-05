@@ -149,6 +149,7 @@ public class Scaffale
     //STEP 1: conto quanti libri dell'autore "autore" sono presenti
 	int contaLibriAutore=0;
 	Libro lib;
+	String[] elencoTitoliAutore;
 	for(int i=0;i<getNumRipiani();i++)
 	{
 	    for(int j=0;j<ripiani[i].getNumMaxVolumi();j++)
@@ -156,13 +157,13 @@ public class Scaffale
 		lib=getLibro(i, j);
 		if(lib!=null)
 		{
-		    if(lib.getTitolo().equals(autore))
+		    if(lib.getAutore().equals(autore))
 			contaLibriAutore++;
 		}
 	    }
 	}
     //STEP 2: istanzio l'array con l'elenco dei titoli dei libri dello stesso autore
-	String[] elencoTitoliAutore=new String[contaLibriAutore];
+	elencoTitoliAutore=new String[contaLibriAutore];
 	contaLibriAutore=0;
 	for(int i=0;i<getNumRipiani();i++)
 	{
@@ -171,7 +172,7 @@ public class Scaffale
 		lib=getLibro(i, j);
 		if(lib!=null)
 		{
-		    if(lib.getTitolo().equals(autore))
+		    if(lib.getAutore().equals(autore))
 		    {
 			elencoTitoliAutore[contaLibriAutore]=lib.getTitolo();
 			contaLibriAutore++;

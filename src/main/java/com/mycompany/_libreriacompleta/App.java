@@ -4,8 +4,9 @@
 
 package com.mycompany._libreriacompleta;
 
-import java.util.Scanner;
-import utilita.Menu;
+import java.io.*;
+import utilita.*;
+//import eccezioni.*;
 
 /**
  *
@@ -18,12 +19,12 @@ public class App
         int numeroVociMenu=7;
 	int voceMenuScelta;
 	String[] vociMenu=new String[numeroVociMenu];
-	Scanner tastiera=new Scanner(System.in);
+	ConsoleInput tastiera=new ConsoleInput();
 	Scaffale s1=new Scaffale();
-	String titolo,autore;
+	String titolo=null,autore=null;
 	Libro[] elencoLibriOrdinatiAlfabeticamente;
 	String[] elencoTitoliAutore;
-	int numeroPagine,ripiano,posizione;
+	int numeroPagine=0,ripiano=0,posizione=0;
 	int esito;
 	
 	vociMenu[0]="0 --> Esci";
@@ -47,20 +48,56 @@ public class App
 		    System.out.println(s1.toString());
 		    break;
 		case 2:
-		    System.out.print("Inserisci dati libro: (invio per continuare...)");
-		    tastiera.nextLine(); //svuoto buffer
-		    System.out.print("Titolo --> ");
-		    titolo=tastiera.nextLine();
-		    System.out.print("Autore --> ");
-		    autore=tastiera.nextLine();
-		    System.out.print("Numero pagine --> ");
-		    numeroPagine=tastiera.nextInt();
+		    System.out.println("Inserisci dati libro:");
+		    try
+		    {
+			System.out.print("Titolo --> ");
+			titolo=tastiera.readString();
+			System.out.print("Autore --> ");
+			autore=tastiera.readString();
+			do{
+			    try
+			    {
+				System.out.print("Numero pagine --> ");
+				numeroPagine=tastiera.readInt();
+				break;
+			    }
+			    catch(NumberFormatException e)
+			    {
+				System.out.println("Errore: input non corretto!");
+			    }
+			}while(true);
+			do{
+			    try
+			    {
+				System.out.print("Ripiano (0..4) --> ");
+				ripiano=tastiera.readInt();
+				break;
+			    }
+			    catch(NumberFormatException e)
+			    {
+				System.out.println("Errore: input non corretto!");
+			    }
+			}while(true);
+			do{
+			    try
+			    {
+				System.out.print("Posizione (0..14) --> ");
+				posizione=tastiera.readInt();
+				break;
+			    }
+			    catch(NumberFormatException e)
+			    {
+				System.out.println("Errore: input non corretto!");
+			    }
+			}while(true);
+		    }
+		    catch(IOException e)
+		    {
+			System.out.println("Errore: impossibile leggere da tastiera!");
+		    }
 		    Libro lib=new Libro(titolo,autore,numeroPagine);
-		    System.out.print("Ripiano (0..4) --> ");
-		    ripiano=tastiera.nextInt();
-		    System.out.print("Posizione (0..14) --> ");
-		    posizione=tastiera.nextInt();
-		    esito=s1.setLibro(lib, ripiano, posizione);
+		    esito=s1.setLibro(lib,ripiano,posizione);
 		    switch(esito)
 		    {
 			case -1:
@@ -77,21 +114,79 @@ public class App
 		    }
 		    break;
 		case 3:
-		    System.out.print("Ripiano (0..4) --> ");
-		    ripiano=tastiera.nextInt();
-		    System.out.print("Posizione (0..14) --> ");
-		    posizione=tastiera.nextInt();
-		    lib=s1.getLibro(ripiano, posizione);
+		    try
+		    {
+			do{
+			    try
+			    {
+				System.out.print("Ripiano (0..4) --> ");
+				ripiano=tastiera.readInt();
+				break;
+			    }
+			    catch(NumberFormatException e)
+			    {
+				System.out.println("Errore: input non corretto!");
+			    }
+			}while(true);
+			do{
+			    try
+			    {
+				System.out.print("Posizione (0..14) --> ");
+				posizione=tastiera.readInt();
+				break;
+			    }
+			    catch(NumberFormatException e)
+			    {
+				System.out.println("Errore: input non corretto!");
+			    }
+			}while(true);
+		    }
+		    catch(IOException e)
+		    {
+			System.out.println("Errore: impossibile leggere da tastiera!");
+		    }
+		    lib=s1.getLibro(ripiano,posizione);
 		    if(lib==null)
 			System.out.println("Libro non trovato!");
 		    else
 			System.out.println("Libro trovato:\n"+lib.toString());
 		    break;
 		case 4:
-		    System.out.print("Inserisci il ripiano del libro da eliminare: ");
-                    ripiano=tastiera.nextInt();
-		    System.out.print("Inserisci la posizione del libro da eliminare: ");
-		    posizione=tastiera.nextInt();
+		    try
+		    {
+			do{
+			    try
+			    {
+				System.out.print("Inserisci il ripiano del libro da eliminare: ");
+				ripiano=tastiera.readInt();
+				break;
+			    }
+			    catch(NumberFormatException e)
+			    {
+				System.out.println("Errore: input non corretto!");
+			    }
+			}while(true);
+			do{
+			    try
+			    {
+				System.out.print("Inserisci la posizione del libro da eliminare: ");
+				posizione=tastiera.readInt();
+				break;
+			    }
+			    catch(NumberFormatException e)
+			    {
+				System.out.println("Errore: input non corretto!");
+			    }
+			    catch(IOException e)
+			    {
+				System.out.println("Errore: impossibile leggere da tastiera!");
+			    }
+			}while(true);
+		    }
+		    catch(IOException e)
+		    {
+			System.out.println("Errore: impossibile leggere da tastiera!");
+		    }
                     esito=s1.rimuoviLibro(ripiano,posizione);
                     if(esito==-3)
 			System.out.println("Ripiano non valido!");
@@ -104,7 +199,14 @@ public class App
 		    break;
 		case 5:
 		    System.out.print("Inserisci autore: ");
-		    autore=tastiera.nextLine();
+		    try
+		    {
+			autore=tastiera.readString();
+		    }
+		    catch(IOException e)
+		    {
+			System.out.println("Errore: impossibile leggere da tastiera!");
+		    }
 		    elencoTitoliAutore=s1.elencoTitoliAutore(autore);
 		    if(elencoTitoliAutore!=null)
 		    {

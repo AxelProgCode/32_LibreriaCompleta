@@ -4,10 +4,17 @@
  */
 package utilita;
 
-import java.util.Scanner;
+import java.io.*;
 
 /**
- *
+ * Classe che rappresenta un menu
+ * La classe consente di:
+ * - visualizzare le voci del menu
+ * - far scegliere all'utente una voce del menu
+ * - restituire il valore associato alla voce scelta dall'utente
+ * elencoVoci: array di stringhe dove ogni stringa rappresenta una
+ * voce del menu, ad ogni voce del menu è associato un valore intero
+ * numeroVoci: valore intero che rappresenta il numero delle voci presenti
  * @author Studente
  */
 public class Menu
@@ -16,7 +23,7 @@ public class Menu
     private int numeroVoci;
     /**
      * Costruttore
-     * @param elencoVoci
+     * @param elencoVoci Rappresenta l'elenco delle voci da cui è costituito il menu
      */
     public Menu(String[] elencoVoci)
     {
@@ -26,7 +33,7 @@ public class Menu
 	    this.elencoVoci[i]=elencoVoci[i];
     }
     /**
-     * Fa visualizzare le voci del menu
+     * Visualizza le voci del menu
      */
     public void visualizzaMenu()
     {
@@ -36,41 +43,39 @@ public class Menu
     }
     /**
      * Permette all'utente di scegliere una voce del menu
-     * @return metodo invocato
+     * I valori interi associati alle voci del menu
+     * vanno da 0 al numeroVoci-1
+     * @return valore intero associato alla voce scelta
      */
     public int sceltaMenu()
     {
-	String inputUtente;
 	int sceltaUtente=0;
 	boolean inputUtenteOK=true;
 	
 	do{
-	    Scanner tastiera=new Scanner(System.in);
+	    ConsoleInput tastiera=new ConsoleInput();
 	    inputUtenteOK=true;
 	    visualizzaMenu();
 	    System.out.print("Scelta --> ");
-	    inputUtente=tastiera.nextLine();
-	    //verifico se l'inputUtente è un numero compreso tra 0 e 9
-	    for(int i=0;i<inputUtente.length();i++)
+	    try
 	    {
-		if(inputUtente.charAt(i)>='0' && inputUtente.charAt(i)<='9')
-		    i++;
-		else
+		sceltaUtente=tastiera.readInt();
+		//verifico se il numero inserito è compreso nelle voci del menu
+		if(sceltaUtente<0 || sceltaUtente>numeroVoci-1)
 		{
 		    inputUtenteOK=false;
-		    break; 
+		    System.out.println("Errore: voce non presente!");
 		}
 	    }
-	    //verifico se il numero inserito è compreso nelle voci del menu
-	    if(inputUtenteOK)
+	    catch(IOException e)
 	    {
-		sceltaUtente=Integer.parseInt(inputUtente);
-		if(sceltaUtente<0 || sceltaUtente>numeroVoci-1)
-		    inputUtenteOK=false;
+		System.out.println("Errore: impossibile leggere da tastiera!");
 	    }
-
-	    if(!inputUtenteOK)
-		System.out.println("Valore inserito non valido, riprova.");
+	    catch(NumberFormatException e)
+	    {
+		System.out.println("Errore: formato non corretto! (int)");
+		inputUtenteOK=false;
+	    }
 	}while(!inputUtenteOK);
 	return sceltaUtente;
     }
