@@ -4,6 +4,8 @@
  */
 package com.mycompany._libreriacompleta;
 
+import eccezioni.*;
+
 /**
  *
  * @author Studente
@@ -31,9 +33,24 @@ public class Mensola
 	volumi=new Libro[NUM_MAX_VOLUMI];
 	for(int i=0;i<NUM_MAX_VOLUMI;i++)
 	{
-	    lib=mensola.getVolume(i);
-	    if(lib!=null)
-		this.setVolume(lib, i);
+	    try
+            {
+                lib=mensola.getVolume(i);
+                if(lib!=null)
+                    this.setVolume(lib, i);
+            }
+	    catch(EccezionePosizioneNonValida e)
+            {
+                //non succederà mai
+            }
+            catch(EccezionePosizioneVuota e)
+            {
+                //non fare nulla
+            }
+            catch(EccezionePosizioneOccupata e)
+            {
+                //non succederà mai
+            }
 	}
     }
     
@@ -45,40 +62,44 @@ public class Mensola
     public Mensola(Libro[] elencoLibri)
     {
 	volumi=new Libro[NUM_MAX_VOLUMI];
-	int numeroLibri=0;
-	//se elecoLibri non contiene libri
-	if(elencoLibri.length==0)
-	    return;
-	if(elencoLibri.length>NUM_MAX_VOLUMI)
-	    numeroLibri=NUM_MAX_VOLUMI;
-	else
-	    numeroLibri=elencoLibri.length;
-	//copio l'i-esimo libro dell'array in volumi
-	for(int i=0;i<numeroLibri;i++)
-	{
-	    if(elencoLibri[i]!=null)
-		volumi[i]=new Libro(elencoLibri[i]);
-	}
+	int numeroLibri;
+	//se i libri da aggiungere sono troppi aggiungo solo NUM_MAX_VOLUMI
+        numeroLibri=elencoLibri.length;
+        if(numeroLibri>NUM_MAX_VOLUMI)
+            numeroLibri=NUM_MAX_VOLUMI;
+        //Copio l'i-esimo libro dell'array
+        for(int i=0;i<numeroLibri;i++)
+        {
+            if(elencoLibri[i]!=null)
+               try
+               {
+                   setVolume(elencoLibri[i], i);
+               } 
+               catch(EccezionePosizioneNonValida e)
+               {
+                   //non succederà mai
+               }
+               catch(EccezionePosizioneOccupata e)
+               {
+                   //non succederà mai
+               }
+        }
     }
     
     /**
      * Aggiunge il volume alla mensola in posizione "posizione"
      * @param volume
      * @param posizione
-     * @return
-     * se la posizione non esiste --> return -1
-     * se la posizione è già occupata --> return -2
-     * se il libro viene posizionato --> return posizione
      */
-    public int setVolume(Libro volume, int posizione)
+    public void setVolume(Libro volume, int posizione) throws EccezionePosizioneNonValida, EccezionePosizioneOccupata
     {
 	if(posizione<0 || posizione>=NUM_MAX_VOLUMI)
-	    return -1; //posizione non valida
+	    throw new EccezionePosizioneNonValida();
 	if(volumi[posizione]!=null)
-	    return -2; //posizione occupata
+	    throw new EccezionePosizioneOccupata();
 	volumi[posizione]=new Libro(volume);
-	return posizione;
     }
+    
     /**
      * Restituisce il volume della mensola in posizione "posizione"
      * @param posizione
@@ -87,36 +108,35 @@ public class Mensola
      * se la posizione è vuota --> return null
      * se la posizione è occupata --> return volume
      */
-    public Libro getVolume(int posizione)
+    public Libro getVolume(int posizione) throws EccezionePosizioneNonValida, EccezionePosizioneVuota
     {
-	
+	Libro lib;
 	if(posizione<0 || posizione>=NUM_MAX_VOLUMI)
-	    return null; //posizione non valida
+	    throw new EccezionePosizioneNonValida();
 	if(volumi[posizione]==null)
-	    return null; //posizione vuota
-	return new Libro(volumi[posizione]);
+	    throw  new EccezionePosizioneVuota();
+        lib=volumi[posizione];
+            return new Libro(lib); //restituisco una copia del libro
     }
+    
     /**
      * Libera la posizione "posizione" e restituisce il numero della posizione liberata
      * @param posizione
-     * @return
-     * se la posizione non esiste --> return -1
-     * se la posizione è già vuota --> return -2
-     * se la posizione è occupata --> return posizione liberata
      */
-    public int rimuoviVolume(int posizione)
+    public void rimuoviVolume(int posizione) throws EccezionePosizioneNonValida, EccezionePosizioneVuota
     {
 	if(posizione<0 || posizione>=NUM_MAX_VOLUMI)
-	    return -1; //posizione non valida
+	    throw new EccezionePosizioneNonValida();
 	if(volumi[posizione]==null)
-	    return -2; //posizione vuota
+	    throw new EccezionePosizioneVuota();
 	volumi[posizione]=null;
-	return posizione;
     }
+    
     public int getNumMaxVolumi()
     {
 	return NUM_MAX_VOLUMI;
     }
+    
     /**
      * Restituisce il numero di libri presenti sulla mensola
      * @return

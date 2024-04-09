@@ -72,6 +72,14 @@ public class Libro
     {
 	return costoPagina;
     }
+    public static void setCostoPagina(double costoPag)
+    {
+        costoPagina=costoPag;
+    }
+    public double getCostoFisso()
+    {
+        return COSTO_FISSO;
+    }
     
     /**
      * Calcola il costo di un libro come somma di COSTO_FISSO e numeroPagine*costoPagina

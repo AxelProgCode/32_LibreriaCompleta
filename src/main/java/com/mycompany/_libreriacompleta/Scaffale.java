@@ -4,7 +4,8 @@
  */
 package com.mycompany._libreriacompleta;
 
-import utilita.Ordinatore;
+import eccezioni.*;
+import utilita.*;
 
 /**
  *
@@ -36,78 +37,78 @@ public class Scaffale
 	ripiani=new Mensola[NUM_RIPIANI];
 	Libro lib;
 	for(int i=0;i<scaffale.getNumRipiani();i++)
-	{
 	    ripiani[i]=new Mensola();
-	    for(int j=0;j<scaffale.getNumMaxLibri(i);j++)
-	    {
-		lib=scaffale.getLibro(i, j);
-		if(lib!=null)
-		    scaffale.setLibro(lib, i, j);
-	    }
-	}
+        for(int i=0;i<scaffale.getNumRipiani();i++)
+        {
+            for(int j=0;j<scaffale.getNumMaxLibri(i);j++)
+            {
+                try
+                {
+                    lib=scaffale.getLibro(i, j);
+                    if(lib!=null)
+                        this.setLibro(lib, i, j);
+                }
+                catch(EccezioneRipianoNonValido e)
+                {
+                    //non succederà mai
+                }
+                catch(EccezionePosizioneNonValida e)
+                {
+                    //non succederà mai
+                }
+                catch(EccezionePosizioneVuota e)
+                {
+                    //non fare nulla
+                }
+                catch(EccezionePosizioneOccupata e)
+                {
+                    //non succederà mai
+                }
+            }
+        }
     }
 
-    
     /**
      * Inserisce il libro nella posizione "posizione" del ripiano "ripiano".
      * @param libro
      * @param ripiano
      * @param posizione
-     * @return
-     * se il ripiano non è valido --> return -3
-     * se la posizione non è valida --> return -1 
-     * se la posizione è occupata --> return -2
-     * se il libro viene posizionato --> return 0
      */
-    public int setLibro(Libro libro, int ripiano, int posizione)
+    public void setLibro(Libro libro, int ripiano, int posizione) throws EccezioneRipianoNonValido, EccezionePosizioneNonValida, EccezionePosizioneOccupata
     {
-	int esito;
 	if(ripiano<0 || ripiano>=NUM_RIPIANI)
-	    return -3; //ripiano non valido
-	esito=ripiani[ripiano].setVolume(libro, posizione);
-	if(esito>0)
-	    return 0;
-	else
-	    return esito;
+	    throw new EccezioneRipianoNonValido();
+	ripiani[ripiano].setVolume(libro, posizione);
     }
+    
     /**
      * Restituisce il libro nella posizione "posizione" del ripiano "ripiano".
      * @param ripiano
      * @param posizione
      * @return
-     * se il ripiano non è valido --> return null
-     * se la posizione non è valida --> return null
-     * se la posizione è vuota --> return null
      * se il libro è presente --> restituisce l’oggetto libro
      */
-    public Libro getLibro(int ripiano, int posizione)
+    public Libro getLibro(int ripiano, int posizione) throws EccezioneRipianoNonValido, EccezionePosizioneNonValida, EccezionePosizioneVuota
     {
 	Libro lib;
 	if(ripiano<0 || ripiano>=NUM_RIPIANI)
-	    return null; //ripiano non valido
+	    throw new EccezioneRipianoNonValido();
 	lib=ripiani[ripiano].getVolume(posizione);
 	return lib;
     }
+    
     /**
      * Libera la posizione "posizione" del ripiano "ripiano"
      * @param ripiano
      * @param posizione
-     * @return
-     * se la posizione non esiste --> return -1
-     * se la posizione è già vuota --> return -2
-     * se la posizione è occupata --> return posizione liberata
      */
-    public int rimuoviLibro(int ripiano, int posizione)
+    public void rimuoviLibro(int ripiano, int posizione) throws EccezioneRipianoNonValido, EccezionePosizioneNonValida, EccezionePosizioneVuota
     {
-	int esito;
 	if(ripiano<0 || ripiano>=NUM_RIPIANI)
-	    return -3; //ripiano non valido
-	esito=ripiani[ripiano].rimuoviVolume(posizione);
-	if(esito>=0)
-	    return 0;
-	else
-	    return esito;
+	    throw new EccezioneRipianoNonValido();
+	ripiani[ripiano].rimuoviVolume(posizione);
     }
+    
     public int getNumRipiani() //Restituisce il numero di riapiani/mensole presenti in uno scaffale
     {
 	return NUM_RIPIANI;
@@ -154,14 +155,28 @@ public class Scaffale
 	{
 	    for(int j=0;j<ripiani[i].getNumMaxVolumi();j++)
 	    {
-		lib=getLibro(i, j);
-		if(lib!=null)
-		{
-		    if(lib.getAutore().equals(autore))
+		try
+                {
+                    lib=getLibro(i, j);
+                    if(lib.getAutore().equals(autore))
 			contaLibriAutore++;
-		}
+                }
+                catch(EccezioneRipianoNonValido e)
+                {
+                    //non succederà mai
+                }
+                catch(EccezionePosizioneNonValida e)
+                {
+                    //non succederà mai
+                }
+                catch(EccezionePosizioneVuota e)
+                {
+                    //non fare nulla
+                }
 	    }
 	}
+        if(contaLibriAutore==0)
+            return null; //non ci sono libri di quell'autore
     //STEP 2: istanzio l'array con l'elenco dei titoli dei libri dello stesso autore
 	elencoTitoliAutore=new String[contaLibriAutore];
 	contaLibriAutore=0;
@@ -169,19 +184,29 @@ public class Scaffale
 	{
 	    for(int j=0;j<ripiani[i].getNumMaxVolumi();j++)
 	    {
-		lib=getLibro(i, j);
-		if(lib!=null)
-		{
-		    if(lib.getAutore().equals(autore))
+		try
+                {
+                    lib=getLibro(i, j);
+                    if(lib.getAutore().equals(autore))
 		    {
 			elencoTitoliAutore[contaLibriAutore]=lib.getTitolo();
 			contaLibriAutore++;
 		    }
-		}
+                }
+                catch(EccezioneRipianoNonValido e)
+                {
+                    //non succederà mai
+                }
+                catch(EccezionePosizioneNonValida e)
+                {
+                       //non succederà mai
+                }
+                catch(EccezionePosizioneVuota e)
+                {
+                    //non fare nulla
+                }
 	    }
 	}
-	if(contaLibriAutore==0)
-	    return null; //non ci sono libri dell'autore "autore"
 	return elencoTitoliAutore;
     }
     
@@ -199,12 +224,24 @@ public class Scaffale
 	{
 	    for(int j=0;j<getNumMaxLibri(i);j++)
 	    {
-		lib=getLibro(i, j);
-		if(lib!=null)
-		{
-		    elencoLibriOrdinati[c]=lib;
-		    c++;
-		}
+		try
+                {
+                    lib=getLibro(i, j);
+                    elencoLibriOrdinati[c]=lib;
+                    c++;
+                }
+                catch(EccezioneRipianoNonValido e)
+                {
+                    //non succederà mai
+                }
+                catch(EccezionePosizioneNonValida e)
+                {
+                    //non succederà mai
+                }
+                catch(EccezionePosizioneVuota e)
+                {
+                    //non fare nulla
+                }
 	    }
 	}
     //STEP 2: istanzio l'array con i libri ordinati
