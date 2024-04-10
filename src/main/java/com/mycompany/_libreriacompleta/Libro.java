@@ -4,6 +4,8 @@
  */
 package com.mycompany._libreriacompleta;
 
+import java.io.Serializable;
+
 /**
  * Rappresenta un libro
  * double costoPagina rappresenta il costo necessario per realizzare ogni pagina del libro
@@ -11,7 +13,7 @@ package com.mycompany._libreriacompleta;
  * 
  * @author Studente
  */
-public class Libro
+public class Libro implements Serializable
 {
     private String titolo;
     private String autore;

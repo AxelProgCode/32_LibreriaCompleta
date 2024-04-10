@@ -4,6 +4,7 @@
  */
 package com.mycompany._libreriacompleta;
 
+import java.io.Serializable;
 import eccezioni.*;
 import utilita.*;
 
@@ -11,7 +12,7 @@ import utilita.*;
  *
  * @author Studente
  */
-public class Scaffale
+public class Scaffale implements Serializable
 {
     private Mensola[] ripiani;
     private final static int NUM_RIPIANI=5;

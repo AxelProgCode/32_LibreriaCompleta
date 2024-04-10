@@ -16,7 +16,7 @@ public class App
 {
     public static void main(String[] args)
     {
-        int numeroVociMenu=9;
+        int numeroVociMenu=12;
 	int voceMenuScelta;
 	String[] vociMenu=new String[numeroVociMenu];
 	ConsoleInput tastiera=new ConsoleInput();
@@ -27,6 +27,7 @@ public class App
         Libro lib;
 	TextFile f1;
         String nomeFileCSV="Libri.csv";
+	String nomeFileBIN="Libreria.bin";
         int numeroPagine,ripiano,posizione;
 	
 	vociMenu[0]="0 --> Esci";
@@ -38,6 +39,9 @@ public class App
 	vociMenu[6]="6 --> Mostra elenco libri ordinati alfabeticamente per titolo (A-Z)";
         vociMenu[7]="7 --> Esporta libri su file in formato CSV";
 	vociMenu[8]="8 --> Importa libri da file in formato CSV";
+	vociMenu[9]="9 --> Salva dati";
+	vociMenu[10]="10 --> Carica dati";
+	vociMenu[11]="11 --> Salva & Esci";
 	
 	Menu menu=new Menu(vociMenu);
 	
@@ -321,6 +325,53 @@ public class App
 		    {
 			System.out.println("Errore: impossibile accedere al file!");
 		    }
+		    break;
+		case 9:
+		    try
+		    {
+			ObjectOutputStream writer=new ObjectOutputStream(new FileOutputStream(nomeFileBIN));
+			writer.writeObject(s1);
+			writer.flush();
+			writer.close();
+			System.out.println("Salvataggio effettuato con successo!");
+		    }
+		    catch(IOException e)
+		    {
+			System.out.println("Errore: impossibile accedere al file!");
+		    }
+		    break;
+		case 10:
+		    try
+		    {
+			ObjectInputStream reader=new ObjectInputStream(new FileInputStream(nomeFileBIN));
+			s1=(Scaffale)reader.readObject();
+			reader.close();
+			System.out.println("Caricamento avvenuto con successo!");
+		    }
+		    catch(IOException e)
+		    {
+			System.out.println("Errore: impossibile accedere al file!");
+		    }
+		    catch(ClassNotFoundException e)
+		    {
+			System.out.println("Errore: impossibile accedere al file!");
+		    }
+		    break;
+		case 11:
+		    try
+		    {
+			ObjectOutputStream writer=new ObjectOutputStream(new FileOutputStream(nomeFileBIN));
+			writer.writeObject(s1);
+			writer.flush();
+			writer.close();
+			System.out.println("Salvataggio effettuato con successo!");
+		    }
+		    catch(IOException e)
+		    {
+			System.out.println("Errore: impossibile accedere al file!");
+		    }
+		    voceMenuScelta=0;
+		    System.out.println("Arrivederci!");
 		    break;
 		default:
 		    System.out.println("Valore inserito non valido, riprova.");
