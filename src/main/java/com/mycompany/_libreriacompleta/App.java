@@ -25,6 +25,7 @@ public class App
 	String[] elencoTitoliAutore;
         Libro[] elencoLibriOrdinatiAlfabeticamente;
         Libro lib;
+	TextFile f1;
         String nomeFileCSV="Libri.csv";
         int numeroPagine,ripiano,posizione;
 	
@@ -240,7 +241,7 @@ public class App
 		case 7:
 		    try
 		    {
-			TextFile f1=new TextFile(nomeFileCSV, 'W');
+			f1=new TextFile(nomeFileCSV, 'W');
 			for(int i=0;i<s1.getNumRipiani();i++)
 			{
 			    for(int j=0;j<s1.getNumMaxLibri(i);j++)
@@ -274,7 +275,52 @@ public class App
 		    }
 		    break;
 		case 8:
-		    System.out.println("");
+		    try
+		    {
+			f1=new TextFile(nomeFileCSV, 'R');
+			System.out.println("Caricamento...");
+			do{
+			    try
+			    {
+				String rigaLetta=f1.fromFile();
+				String[] datiVolume=rigaLetta.split(";");
+				ripiano=Integer.parseInt(datiVolume[0]);
+				posizione=Integer.parseInt(datiVolume[1]);
+				titolo=datiVolume[2];
+				autore=datiVolume[3];
+				numeroPagine=Integer.parseInt(datiVolume[4]);
+				lib=new Libro(titolo, autore, numeroPagine);
+				try
+				{
+				    s1.setLibro(lib, ripiano, posizione);
+				    System.out.println("\tLibro "+titolo+" importato!");
+				}
+				catch(EccezioneRipianoNonValido e)
+				{
+				    System.out.println("\tErrore: ripiano "+ripiano+" non valido per il libro "+titolo+"!");
+				}
+				catch(EccezionePosizioneNonValida e)
+				{
+				    System.out.println("\tErrore: posizione "+posizione+" non valida per il libro "+titolo+"!");
+				}
+				catch(EccezionePosizioneOccupata e)
+				{
+				    System.out.println("\tErrore: coordinata ("+ripiano+";"+posizione+") occupata! Libro "+titolo+" non importato!");
+				}
+			    }
+			    catch(FileException e)
+			    {
+				System.out.println("Fine del file!");
+				f1.closeFile();
+				System.out.println("Importazione terminata!");
+				break;
+			    }
+			}while(true);
+		    }
+		    catch(IOException e)
+		    {
+			System.out.println("Errore: impossibile accedere al file!");
+		    }
 		    break;
 		default:
 		    System.out.println("Valore inserito non valido, riprova.");

@@ -73,7 +73,7 @@ public class Menu
 	    }
 	    catch(NumberFormatException e)
 	    {
-		System.out.println("Errore: formato non corretto! (int)");
+		System.out.println("Errore: valore inserito non valido (formato non corretto), riprova.");
 		inputUtenteOK=false;
 	    }
 	}while(!inputUtenteOK);
