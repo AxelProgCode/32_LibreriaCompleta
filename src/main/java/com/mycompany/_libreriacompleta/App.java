@@ -103,19 +103,19 @@ public class App
                         s1.setLibro(lib,ripiano,posizione);
                         System.out.println("Libro inserito correttamente!");
                     }
-                    catch (IOException e)
+                    catch(IOException e)
                     {
                         System.out.println("Errore: Impossibile leggere da tastiera.");
                     }
-                    catch (EccezioneRipianoNonValido e)
+                    catch(EccezioneRipianoNonValido e)
                     {
                         System.out.println("Errore: Ripiano non valido!");
                     }
-                    catch (EccezionePosizioneNonValida e)
+                    catch(EccezionePosizioneNonValida e)
                     {
                         System.out.println("Errore: Posizione non valida!");
                     }
-                    catch (EccezionePosizioneOccupata e)
+                    catch(EccezionePosizioneOccupata e)
                     {
                         System.out.println("Errore: Posizione occupata!");
                     }
@@ -154,11 +154,11 @@ public class App
 		    {
 			System.out.println("Errore: impossibile leggere da tastiera!");
 		    }
-                    catch (EccezioneRipianoNonValido e)
+                    catch(EccezioneRipianoNonValido e)
                     {
                         System.out.println("Errore: Ripiano non valido!");
                     }
-                    catch (EccezionePosizioneNonValida e)
+                    catch(EccezionePosizioneNonValida e)
                     {
                         System.out.println("Errore: Posizione non valida!");
                     }
