@@ -110,7 +110,7 @@ public class Scaffale implements Serializable
 	ripiani[ripiano].rimuoviVolume(posizione);
     }
     
-    public int getNumRipiani() //Restituisce il numero di riapiani/mensole presenti in uno scaffale
+    public int getNumRipiani() //Restituisce il numero di ripiani/mensole presenti in uno scaffale
     {
 	return NUM_RIPIANI;
     }
